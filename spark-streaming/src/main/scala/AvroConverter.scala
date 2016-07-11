@@ -1,19 +1,20 @@
-import org.apache.avro.generic.{GenericRecord, IndexedRecord}
+import org.apache.avro.generic.GenericRecord
 
+// Avro -> Case class conversion
 object AvroConverter {
   def shipment(record: GenericRecord) = {
-    EcommerceSchema.Shipments_v1(
+    Schemas.Shipments_v1(
       record.get("itemID").asInstanceOf[Long],
       record.get("storeCode").toString,
       record.get("count").asInstanceOf[Int])
   }
 
   def sale(record: GenericRecord) = {
-    EcommerceSchema.Sales_v2(
+    Schemas.Sales_v2(
       record.get("itemID").asInstanceOf[Long],
       record.get("storeCode").toString,
       record.get("count").asInstanceOf[Int],
-      record.get("customerID").toString().asInstanceOf[String])
+      record.get("customerID").toString)
   }
 
   def getShipment(message: (Object, Object)) = {
