@@ -14,7 +14,7 @@ object Main extends App {
 
   val kafkaParams = Map[String, String](
     "auto.offset.reset" -> "smallest",
-    // "zookeeper.connect" -> "localhost:2181",
+    "zookeeper.connect" -> "cloudera.landoop.com:22181",
     "group.id" -> "group1",
     "schema.registry.url" -> "http://cloudera.landoop.com:28081",
     "metadata.broker.list" -> "cloudera.landoop.com:29092")

@@ -1,3 +1,4 @@
+package tools
 
 import kafka.serializer.DefaultDecoder
 import org.apache.spark.streaming.StreamingContext
