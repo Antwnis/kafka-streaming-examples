@@ -22,7 +22,7 @@ object Main extends App {
   val salesTopic = Set("generator-sales")
   val salesStream = KafkaUtils.createDirectStream[Array[Byte], Object, DefaultDecoder, KafkaAvroDecoder](ssc, kafkaParams, salesTopic)
 
-  val shipmentsTopic = Set("generator-sales")
+  val shipmentsTopic = Set("generator-shipments")
   val shipmentsStream = KafkaUtils.createDirectStream[Array[Byte], Object, DefaultDecoder, KafkaAvroDecoder](ssc, kafkaParams, shipmentsTopic)
 
   val sales = salesStream
