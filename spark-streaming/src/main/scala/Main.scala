@@ -1,9 +1,9 @@
 import EcommerceSchema.{Sales_v2, Shipments_v1}
-import kafka.serializer._
-import org.apache.spark.SparkConf
 import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import io.confluent.kafka.serializers.KafkaAvroDecoder
+import kafka.serializer.DefaultDecoder
+import org.apache.spark.SparkConf
 
 object Main extends App {
 
@@ -16,7 +16,7 @@ object Main extends App {
     "auto.offset.reset" -> "smallest",
     // "zookeeper.connect" -> "localhost:2181",
     "group.id" -> "group1",
-    "schema.registry.url" -> "cloudera.landoop.com:28081",
+    "schema.registry.url" -> "http://cloudera.landoop.com:28081",
     "metadata.broker.list" -> "cloudera.landoop.com:29092")
 
   val salesTopic = Set("generator-sales")
