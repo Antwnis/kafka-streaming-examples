@@ -3,8 +3,13 @@ import io.confluent.kafka.serializers.KafkaAvroDecoder
 import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.SparkConf
+import redis.embedded.RedisServer
 
 object Run extends App {
+
+  // Start embedded Redis Server
+  val redisServer = new RedisServer(6379)
+  redisServer.start()
 
   val sparkConf = new SparkConf()
     .setAppName("e-commerce-demo-inventory")
@@ -33,30 +38,14 @@ object Run extends App {
   shipment.map(x => 1).reduce(_ + _)
     .print()
 
+  sys.ShutdownHookThread {
+    println("Gracefully stopping Spark Streaming Application")
+    ssc.stop(stopSparkContext = true, stopGracefully = true)
+    redisServer.stop()
+    println("Application stopped")
+  }
+
   ssc.start()
   ssc.awaitTermination()
 
 }
-
-//sales.print()
-//
-////  println("Sales = " + sales)
-//
-////    .count()
-//
-////  println("Shipments = " + shipment)
-
-
-//}
-
-
-//  val lines = messages.map { msg =>
-//    println(msg._1.toString + " -> " + msg._2.toString)
-//    // AvroConverter.convert(_)
-//  }
-//  lines.print()
-
-//  val count = messages.map { msg =>
-//    println(msg._1 + " -> " + msg._2.toString)
-//    // AvroConverter.convert(_)
-//  }
