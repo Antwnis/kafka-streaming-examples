@@ -4,8 +4,6 @@ oneJarSettings
 
 name := "spark-streaming"
 
-libraryDependencies += "commons-lang" % "commons-lang" % "2.6"
-
 version := "1.0"
 
 scalaVersion := "2.11.8"
@@ -13,7 +11,13 @@ scalaVersion := "2.11.8"
 resolvers += "confluent" at "http://packages.confluent.io/maven/"
 
 libraryDependencies ++= Seq(
+  "org.apache.spark" % "spark-core_2.11" % "1.6.2",
   "org.apache.spark" % "spark-streaming_2.11" % "1.6.2",
-  "org.apache.spark" % "spark-streaming-kafka_2.11" % "1.6.2", // kafka
-  "io.confluent" % "kafka-avro-serializer" % "2.0.1"
+  "org.apache.spark" % "spark-streaming-kafka_2.11" % "1.6.2",
+  "io.confluent" % "kafka-avro-serializer" % "3.0.0" // KafkaAvroDecoder,
+)
+
+// Fixes: com.fasterxml.jackson.databind.JsonMappingException: Could not find creator property with name 'id' (in class org.apache.spark.rdd.RDDOperationScope)
+dependencyOverrides ++= Set(
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.4.4"
 )

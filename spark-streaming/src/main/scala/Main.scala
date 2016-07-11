@@ -1,8 +1,7 @@
 import EcommerceSchema.{Sales_v2, Shipments_v1}
+import io.confluent.kafka.serializers.KafkaAvroDecoder
 import org.apache.spark.streaming.kafka.KafkaUtils
 import org.apache.spark.streaming.{Seconds, StreamingContext}
-import io.confluent.kafka.serializers.KafkaAvroDecoder
-import kafka.serializer.DefaultDecoder
 import org.apache.spark.SparkConf
 
 object Main extends App {
@@ -13,29 +12,32 @@ object Main extends App {
   val ssc = new StreamingContext(sparkConf, Seconds(4))
 
   val kafkaParams = Map[String, String](
-    "auto.offset.reset" -> "smallest",
+    //"auto.offset.reset" -> "smallest",
     "zookeeper.connect" -> "cloudera.landoop.com:22181",
-    "group.id" -> "group1",
-    "schema.registry.url" -> "http://cloudera.landoop.com:28081",
-    "metadata.broker.list" -> "cloudera.landoop.com:29092")
+    "group.id" -> "group111112",
+    "metadata.broker.list" -> "cloudera.landoop.com:29092",
+    "schema.registry.url" -> "http://cloudera.landoop.com:28081")
 
   val salesTopic = Set("generator-sales")
-  val salesStream = KafkaUtils.createDirectStream[Array[Byte], Object, DefaultDecoder, KafkaAvroDecoder](ssc, kafkaParams, salesTopic)
+  val salesStream = KafkaUtils.createDirectStream[Object, Object, KafkaAvroDecoder, KafkaAvroDecoder](ssc, kafkaParams, salesTopic)
 
-  val shipmentsTopic = Set("generator-shipments")
-  val shipmentsStream = KafkaUtils.createDirectStream[Array[Byte], Object, DefaultDecoder, KafkaAvroDecoder](ssc, kafkaParams, shipmentsTopic)
+  //  val shipmentsTopic = Set("generator-shipments")
+  //  val shipmentsStream = KafkaUtils.createDirectStream[Array[Byte],  Array[Byte], DefaultDecoder, DefaultDecoder](ssc, kafkaParams, shipmentsTopic)
 
-  val sales = salesStream
-    .map[Sales_v2](AvroConverter.getSale(_))
-    .count()
+  val sales = salesStream.map[Sales_v2] { x =>
+    val a = AvroConverter.getSale(x)
+    println("A --> " + a.toString)
+    a
+  }
+  sales.print()
 
-  println("Sales = " + sales)
+  //  println("Sales = " + sales)
 
-  val shipment = salesStream
-    .map[Shipments_v1](AvroConverter.getShipment(_))
-    .count()
+  //  val shipment = salesStream
+  //    .map[Shipments_v1](AvroConverter.getShipment(_))
+  //    .count()
 
-  println("Shipments = " + shipment)
+  //  println("Shipments = " + shipment)
 
   ssc.start()
   ssc.awaitTermination()
