@@ -54,7 +54,7 @@ object MapFunctionScalaExample {
     // Note: Whether, in general, you should follow this artificial example and store the original
     //       value in the key field is debatable and depends on your use case.  If in doubt, don't
     //       do it.
-    val originalAndUppercased: KStream[String, String] = textLines.map { case (key:String, value:String) => (value, value.toUpperCase()) }
+    val originalAndUppercased: KStream[String, String] = textLines.map { (key, value) => (value, value.toString.toUpperCase()) }
 
     // Write the results to a new Kafka topic "OriginalAndUppercasedTopic".
     //

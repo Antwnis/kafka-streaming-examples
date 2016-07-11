@@ -10,10 +10,7 @@ version := "1.0"
 
 scalaVersion := "2.11.8"
 
-val repositories = Seq(
-  "confluent" at "http://packages.confluent.io/maven/",
-  Resolver.sonatypeRepo("public")
-)
+resolvers += "confluent" at "http://packages.confluent.io/maven/"
 
 libraryDependencies ++= Seq(
   "org.apache.spark" % "spark-streaming_2.11" % "1.6.2",
